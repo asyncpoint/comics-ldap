@@ -30,7 +30,7 @@ far more conflict-heavy than DC's 55.6% heroes vs 24.6% villains split.
 ### Directory tree
 
 ```
-dc=comics,dc=com
+dc=comics,dc=ldap
 ├── ou=users                   All characters searchable here
 │   ├── ou=dc                  DC Comics characters
 │   │   ├── uid=batman
@@ -66,12 +66,12 @@ list individual users — instead it has the **subgroup DN as a member**.
 
 ```
 cn=heroes
-  uniqueMember: cn=dc-heroes,ou=groups,dc=comics,dc=com    <- subgroup
-  uniqueMember: cn=marvel-heroes,ou=groups,dc=comics,dc=com <- subgroup
+  uniqueMember: cn=dc-heroes,ou=groups,dc=comics,dc=ldap    <- subgroup
+  uniqueMember: cn=marvel-heroes,ou=groups,dc=comics,dc=ldap <- subgroup
 
 cn=dc-heroes
-  uniqueMember: uid=batman,ou=dc,ou=users,dc=comics,dc=com
-  uniqueMember: uid=superman,ou=dc,ou=users,dc=comics,dc=com
+  uniqueMember: uid=batman,ou=dc,ou=users,dc=comics,dc=ldap
+  uniqueMember: uid=superman,ou=dc,ou=users,dc=comics,dc=ldap
   uniqueMember: ...
 ```
 
@@ -113,9 +113,9 @@ docker run -d \
 | Setting | Value |
 |---|---|
 | LDAP URL | `ldap://localhost:389` |
-| Admin DN | `cn=admin,dc=comics,dc=com` |
+| Admin DN | `cn=admin,dc=comics,dc=ldap` |
 | Password | `P@ssw0rd` |
-| Base DN | `dc=comics,dc=com` |
+| Base DN | `dc=comics,dc=ldap` |
 
 ---
 
@@ -153,10 +153,10 @@ Optional parameters:
 
 | Parameter | Default | Description |
 |---|---|---|
-| `-Password` | `P@ssw0rd` | Default password for all user entries |
+| `-Password` | `s3cr3t` | Default password for all user entries |
 | `-Target` | `OpenLDAP` | `OpenLDAP` or `ActiveDirectory` |
 | `-OutputDir` | `.\ldifs` | Output folder for generated files |
-| `-RootDN` | `dc=comics,dc=com` | Root DN |
+| `-RootDN` | `dc=comics,dc=ldap` | Root DN |
 | `-Verbose` | off | Show per-record processing detail |
 
 ### Step 3 — Start the containers
@@ -171,7 +171,7 @@ Allow 1-2 minutes for ~23,000 entries plus group memberships to load.
 ### Step 4 — Browse with phpLDAPadmin
 
 Open **http://localhost:8080** and log in:
-- **Login DN:** `cn=admin,dc=comics,dc=com`
+- **Login DN:** `cn=admin,dc=comics,dc=ldap`
 - **Password:** `P@ssw0rd`
 
 ---
@@ -181,36 +181,36 @@ Open **http://localhost:8080** and log in:
 **Count all characters:**
 ```bash
 docker exec openldap ldapsearch -x -H ldap://localhost \
-  -D "cn=admin,dc=comics,dc=com" -w "P@ssw0rd" \
-  -b "ou=users,dc=comics,dc=com" "(objectClass=inetOrgPerson)" dn \
+  -D "cn=admin,dc=comics,dc=ldap" -w "P@ssw0rd" \
+  -b "ou=users,dc=comics,dc=ldap" "(objectClass=inetOrgPerson)" dn \
   | grep -c "^dn:"
 ```
 
 **List members of dc-heroes (direct members of subgroup):**
 ```bash
 docker exec openldap ldapsearch -x -H ldap://localhost \
-  -D "cn=admin,dc=comics,dc=com" -w "P@ssw0rd" \
-  -b "ou=groups,dc=comics,dc=com" "(cn=dc-heroes)" uniqueMember
+  -D "cn=admin,dc=comics,dc=ldap" -w "P@ssw0rd" \
+  -b "ou=groups,dc=comics,dc=ldap" "(cn=dc-heroes)" uniqueMember
 ```
 
 **Inspect heroes parent group (shows subgroup DNs as members):**
 ```bash
 docker exec openldap ldapsearch -x -H ldap://localhost \
-  -D "cn=admin,dc=comics,dc=com" -w "P@ssw0rd" \
-  -b "ou=groups,dc=comics,dc=com" "(cn=heroes)" uniqueMember
+  -D "cn=admin,dc=comics,dc=ldap" -w "P@ssw0rd" \
+  -b "ou=groups,dc=comics,dc=ldap" "(cn=heroes)" uniqueMember
 ```
 
 **Look up a specific character:**
 ```bash
 docker exec openldap ldapsearch -x -H ldap://localhost \
-  -D "cn=admin,dc=comics,dc=com" -w "P@ssw0rd" \
-  -b "ou=dc,ou=users,dc=comics,dc=com" "(uid=Batman)"
+  -D "cn=admin,dc=comics,dc=ldap" -w "P@ssw0rd" \
+  -b "ou=dc,ou=users,dc=comics,dc=ldap" "(uid=Batman)"
 ```
 
 **Test user authentication:**
 ```bash
 docker exec openldap ldapwhoami -x -H ldap://localhost \
-  -D "uid=batman,ou=dc,ou=users,dc=comics,dc=com" \
+  -D "uid=batman,ou=dc,ou=users,dc=comics,dc=ldap" \
   -w "P@ssw0rd"
 ```
 
@@ -252,17 +252,17 @@ you use.
 
 | Parameter | Default | Description |
 |---|---|---|
-| `-Password` | `P@ssw0rd` | Password for all user entries |
+| `-Password` | `s3cr3t` | Password for all user entries |
 | `-Target` | `OpenLDAP` | `OpenLDAP` or `ActiveDirectory` |
 | `-OutputDir` | `.\ldifs` | Output folder |
-| `-RootDN` | `dc=comics,dc=com` | Root DN |
+| `-RootDN` | `dc=comics,dc=ldap` | Root DN |
 | `-Verbose` | off | Per-record processing detail |
 
 ---
 
 ### Bash (Linux / macOS)
 
-**Requirements:** `bash` 4+, `python3`, `curl`. Python3 handles all CSV parsing
+**Requirements:** `bash` 4+, `curl`. Python3 handles all CSV parsing
 and LDIF encoding — no fragile shell text processing.
 
 ```bash
@@ -282,16 +282,16 @@ chmod +x fetch-and-convert.sh convert-to-ldif.sh
 **Convert a single local CSV manually:**
 ```bash
 ./convert-to-ldif.sh dc-wikia-data.csv
-./convert-to-ldif.sh marvel-wikia-data.csv --password "Secret1!" --verbose
+./convert-to-ldif.sh marvel-wikia-data.csv --password "s3cr3t" --verbose
 ./convert-to-ldif.sh dc-wikia-data.csv --target ActiveDirectory
 ```
 
 | Flag | Default | Description |
 |---|---|---|
-| `--password`, `-p` | `P@ssw0rd` | Password for all user entries |
+| `--password`, `-p` | `s3cr3t` | Password for all user entries |
 | `--target`, `-t` | `OpenLDAP` | `OpenLDAP` or `ActiveDirectory` |
 | `--output-dir`, `-o` | `./ldifs` | Output folder |
-| `--root-dn`, `-r` | `dc=comics,dc=com` | Root DN |
+| `--root-dn`, `-r` | `dc=comics,dc=ldap` | Root DN |
 | `--verbose`, `-v` | off | Per-record processing detail |
 
 ---
@@ -318,13 +318,13 @@ After running either `Fetch-And-Convert.ps1` or `fetch-and-convert.sh`, the
 # .\Fetch-And-Convert.ps1       # Windows
 
 # 2. Build — all ~23k characters baked in, zero setup for end users
-docker build -t yourname/comics-ldap:latest .
+docker build -t asyncpoint/comics-ldap:latest .
 
 # 3. Verify
-docker run -d --name test -p 389:389 yourname/comics-ldap:latest --copy-service
+docker run -d --name test -p 389:389 asyncpoint/comics-ldap:latest --copy-service
 docker exec test ldapsearch -x -H ldap://localhost \
-  -D "cn=admin,dc=comics,dc=com" -w "P@ssw0rd" \
-  -b "ou=users,dc=comics,dc=com" "(objectClass=inetOrgPerson)" dn \
+  -D "cn=admin,dc=comics,dc=ldap" -w admin \
+  -b "ou=users,dc=comics,dc=ldap" "(objectClass=inetOrgPerson)" dn \
   | grep -c "^dn:"
 
 # 4. Push to Docker Hub
@@ -375,4 +375,4 @@ docker compose up -d
 - Character data from the [FiveThirtyEight data repository](https://github.com/fivethirtyeight/data/tree/master/comic-characters),
 licensed under [CC Attribution 4.0](https://creativecommons.org/licenses/by/4.0/).
 Original article: [Comic Books Are Still Made By Men, For Men And About Men](https://fivethirtyeight.com/features/women-in-comic-books/)
-- osixia/openldap:1.5.0 is used as base image
+- [osixia/openldap:2.6.10-alpha](https://github.com/osixia/container-openldap/tree/develop) is used as base image
