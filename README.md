@@ -1,5 +1,35 @@
 # comics-ldap
 
+---
+
+## 🚀 Version 2.0.0 Updates & Breaking Changes
+
+### 📦 Image Size Reduction
+With `v2.0.0`, the base image has been upgraded from `osixia/openldap:1.5.0` to `osixia/openldap:2.6.10-alpha`. This upgrade drastically optimizes the layer footprint and updates core security patches:
+
+| Metric | Version 1.0.0 | Version 2.0.0 | Impact |
+| :--- | :--- | :--- | :--- |
+| **Base Image** | `osixia/openldap:1.5.0` | `osixia/openldap:2.6.10-alpha` | Modernized dependencies |
+| **Compressed Size** | ~285 MB | ~110 MB | **~60% smaller pull size** |
+| **Uncompressed Size** | ~650 MB | ~270 MB | **~58% reduced disk footprint** |
+
+---
+
+### ⚠️ Breaking Changes
+
+1. **Default Base DN Updated**
+   The Base DN was changed to directly align with the repository name (`comics-ldap`):
+   * **Old Base DN:** `dc=comics,dc=com`
+   * **New Base DN:** `dc=comics,dc=ldap`
+
+2. **Default Password Updated**
+   * **Old Password (`v1.0.0`):** `P@ssw0rd`
+   * **New Password (`v2.0.0`):** `s3cret`
+
+> **Note:** Update your connection strings, search scopes, and test environments before upgrading to `v2.0.0`.
+
+---
+
 A ready-to-use OpenLDAP directory pre-loaded with **~23,000+ DC and Marvel comic
 characters** organised into a realistic nested group structure — heroes, villains,
 living, deceased — mirroring real-world LDAP deployments.
