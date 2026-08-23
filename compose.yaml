@@ -1,0 +1,19 @@
+services:
+  openldap:
+    image: osixia/openldap:2.6.10-alpha
+    container_name: ${CONTAINER_NAME:-openldap}
+    hostname: comics.ldap
+    restart: unless-stopped
+
+    ports:
+      - "389:3890"
+
+    environment:
+      OPENLDAP_BOOTSTRAP_ORGANIZATION: "Comics"
+      OPENLDAP_BOOTSTRAP_SUFFIX: "${LDAP_BASE_DN}"
+
+      OPENLDAP_BOOTSTRAP_DATA_ROOT_DN: "${LDAP_ADMIN_DN}"
+      OPENLDAP_BOOTSTRAP_DATA_ROOT_PASSWORD_HASHED: "${OPENLDAP_BOOTSTRAP_ROOT_PASSWORD_HASHED:?Set OPENLDAP_BOOTSTRAP_ROOT_PASSWORD_HASHED in .env}"
+
+      OPENLDAP_BOOTSTRAP_CONFIG_ROOT_DN: "cn=admin,cn=config"
+      OPENLDAP_BOOTSTRAP_CONFIG_ROOT_PASSWORD_HASHED: "${OPENLDAP_BOOTSTRAP_ROOT_PASSWORD_HASHED:?Set OPENLDAP_BOOTSTRAP_ROOT_PASSWORD_HASHED in .env}"

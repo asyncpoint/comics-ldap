@@ -1,0 +1,151 @@
+# 00-structure.ldif
+# Creates the full OU and group tree before any user entries are loaded.
+# Loaded first (alphabetical order).
+
+# 1. The Root Domain
+#dn: dc=comics,dc=ldap
+#objectClass: top
+#objectClass: dcObject
+#objectClass: organization
+#o: Comics World
+#dc: comics
+
+# 2. The Admin User
+#dn: cn=admin,dc=comics,dc=ldap
+#objectClass: simpleSecurityObject
+#objectClass: organizationalRole
+#cn: admin
+#userPassword: P@ssw0rd
+#description: LDAP Directory Administrator
+
+# -- Users container ----------------------------------------------------------
+dn: ou=users,dc=comics,dc=ldap
+objectClass: top
+objectClass: organizationalUnit
+ou: users
+
+# DC Comics publisher OU
+dn: ou=dc,ou=users,dc=comics,dc=ldap
+objectClass: top
+objectClass: organizationalUnit
+ou: dc
+
+# Marvel publisher OU
+dn: ou=marvel,ou=users,dc=comics,dc=ldap
+objectClass: top
+objectClass: organizationalUnit
+ou: marvel
+
+# -- Groups container ---------------------------------------------------------
+dn: ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: organizationalUnit
+ou: groups
+
+# Cross-publisher groups
+dn: cn=heroes,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: heroes
+description: Good Characters from DC and Marvel
+uniqueMember: cn=heroes,ou=groups,dc=comics,dc=ldap
+
+dn: cn=villains,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: villains
+description: Bad Characters from DC and Marvel
+uniqueMember: cn=villains,ou=groups,dc=comics,dc=ldap
+
+dn: cn=neutral,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: neutral
+description: Neutral Characters from DC and Marvel
+uniqueMember: cn=neutral,ou=groups,dc=comics,dc=ldap
+
+dn: cn=living,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: living
+description: Living Characters from DC and Marvel
+uniqueMember: cn=living,ou=groups,dc=comics,dc=ldap
+
+dn: cn=deceased,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: deceased
+description: Deceased Characters from DC and Marvel
+uniqueMember: cn=deceased,ou=groups,dc=comics,dc=ldap
+
+# DC-specific groups
+dn: cn=dc-heroes,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: dc-heroes
+description: Good Characters from DC Comics
+uniqueMember: cn=dc-heroes,ou=groups,dc=comics,dc=ldap
+
+dn: cn=dc-villains,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: dc-villains
+description: Bad Characters from DC Comics
+uniqueMember: cn=dc-villains,ou=groups,dc=comics,dc=ldap
+
+dn: cn=dc-neutral,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: dc-neutral
+description: Neutral Characters from DC Comics
+uniqueMember: cn=dc-neutral,ou=groups,dc=comics,dc=ldap
+
+dn: cn=dc-living,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: dc-living
+description: Living Characters from DC Comics
+uniqueMember: cn=dc-living,ou=groups,dc=comics,dc=ldap
+
+dn: cn=dc-deceased,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: dc-deceased
+description: Deceased Characters from DC Comics
+uniqueMember: cn=dc-deceased,ou=groups,dc=comics,dc=ldap
+
+# Marvel-specific groups
+dn: cn=marvel-heroes,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: marvel-heroes
+description: Good Characters from Marvel Comics
+uniqueMember: cn=marvel-heroes,ou=groups,dc=comics,dc=ldap
+
+dn: cn=marvel-villains,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: marvel-villains
+description: Bad Characters from Marvel Comics
+uniqueMember: cn=marvel-villains,ou=groups,dc=comics,dc=ldap
+
+dn: cn=marvel-neutral,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: marvel-neutral
+description: Neutral Characters from Marvel Comics
+uniqueMember: cn=marvel-neutral,ou=groups,dc=comics,dc=ldap
+
+dn: cn=marvel-living,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: marvel-living
+description: Living Characters from Marvel Comics
+uniqueMember: cn=marvel-living,ou=groups,dc=comics,dc=ldap
+
+dn: cn=marvel-deceased,ou=groups,dc=comics,dc=ldap
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: marvel-deceased
+description: Deceased Characters from Marvel Comics
+uniqueMember: cn=marvel-deceased,ou=groups,dc=comics,dc=ldap
