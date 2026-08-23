@@ -10,8 +10,8 @@ With `v2.0.0`, the base image has been upgraded from `osixia/openldap:1.5.0` to 
 | Metric | Version 1.0.0 | Version 2.0.0 | Impact |
 | :--- | :--- | :--- | :--- |
 | **Base Image** | `osixia/openldap:1.5.0` | `osixia/openldap:2.6.10-alpha` | Modernized dependencies |
-| **Compressed Size** | ~285 MB | ~110 MB | **~60% smaller pull size** |
-| **Uncompressed Size** | ~650 MB | ~270 MB | **~58% reduced disk footprint** |
+| **Compressed Size** | ~94 MB | ~24 MB | **~60% smaller pull size** |
+| **Uncompressed Size** | ~305 MB | ~65 MB | **~58% reduced disk footprint** |
 
 ---
 
